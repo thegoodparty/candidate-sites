@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import { fetchHelper } from '@/helpers/fetchHelper'
 import WebsitePage from './components/WebsitePage'
 import { Website } from './types/website.type'
+import { getCandidateMetaData } from '../shared/utils/candidateMetaData'
 
 interface PageProps {
   params: Promise<{ vanityPath: string }>
@@ -21,13 +22,7 @@ export async function generateMetadata({ params }: PageProps) {
     notFound()
   }
 
-  return {
-    title: `${website.content?.main?.title}`,
-    description: website.content?.main?.tagline,
-    other: {
-      isCandidateWebsite: true,
-    },
-  }
+  return getCandidateMetaData(website)
 }
 
 export default async function CandidateWebsitePage({ params }: PageProps) {
