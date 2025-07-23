@@ -2,11 +2,27 @@ import WebsitePage from './[vanityPath]/components/WebsitePage';
 import { Website } from './[vanityPath]/types/website.type'
 import { fetchHelper } from '@/helpers/fetchHelper'
 import { headers } from 'next/headers'
+import { getCandidateMetaData } from './shared/utils/candidateMetaData';
 
 export const dynamic = 'force-dynamic'
 
 async function getWebsiteByDomain({ domain }: { domain: string }): Promise<Website | null> {
   return await fetchHelper<Website>(`websites/by-domain/${domain}`)
+}
+
+export async function generateMetadata() {
+  const headersList = await headers()
+  const host = headersList.get('host') || 'localhost'
+  const website = await getWebsiteByDomain({ domain: host })
+
+  if (!website) {
+    return {
+      title: 'GoodParty.org Candidate Sites',
+      description: 'GoodParty.org Candidate Sites',  
+    }
+  }
+
+  return getCandidateMetaData(website)
 }
 
 export default async function Home() {
