@@ -37,13 +37,11 @@ export default function HeroSection({
           </Button>
         </div>
         {hasImage && (
-          <div className="w-full rounded-lg overflow-hidden shrink md:w-1/2">
-            <Image
+          <div className="w-full overflow-hidden shrink md:w-1/2">
+            <img
               src={content?.main?.image}
               alt="Campaign Hero"
-              className="w-full"
-              height={640}
-              width={1280}
+              className="max-w-full rounded-lg mx-auto"
             />
           </div>
         )}
