@@ -3,9 +3,11 @@ import { fetchHelper } from '@/helpers/fetchHelper'
 import WebsitePage from './components/WebsitePage'
 import { Website } from './types/website.type'
 import { getCandidateMetaData } from '../shared/utils/candidateMetaData'
+import { getImageDimensionsServer, ImageDimensions } from '../shared/utils/getImageDimensions'
 
-interface PageProps {
+export interface PageProps {
   params: Promise<{ vanityPath: string }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 async function getWebsite({
@@ -29,11 +31,23 @@ export async function generateMetadata({ params }: PageProps) {
   return getCandidateMetaData(website)
 }
 
-export default async function CandidateWebsitePage({ params }: PageProps) {
+export default async function CandidateWebsitePage({ params, searchParams }: PageProps) {
   const website = await getWebsite(await params)
+  const { privacy } = await searchParams
 
   if (!website) {
     notFound()
+  }
+
+  const image = website.content?.main?.image
+  let imageDimensions: ImageDimensions | undefined = undefined
+
+  if (image) {
+    try {
+      imageDimensions = await getImageDimensionsServer(image)
+    } catch (error) {
+      console.error('Failed to get image dimensions:', error)
+    }
   }
 
   return (
@@ -41,7 +55,7 @@ export default async function CandidateWebsitePage({ params }: PageProps) {
       {/* 
       <WebsiteViewTracker vanityPath={website.vanityPath} />
      */}
-      <WebsitePage website={website} />
+      <WebsitePage website={website} imageDimensions={imageDimensions} privacyPolicy={privacy==='true'} />
     </>
   )
 }

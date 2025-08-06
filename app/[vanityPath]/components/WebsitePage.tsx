@@ -12,6 +12,7 @@ import WebsiteFooter from './WebsiteFooter'
 import ContactSection from './ContactSection'
 import { getUserFullName } from '@/app/shared/utils/getUserFullName'
 import WebsiteViewTracker from './WebsiteViewTracker'
+import { ImageDimensions } from '@/app/shared/utils/getImageDimensions'
 
 const scrollSettings = {
   duration: 800,
@@ -24,13 +25,17 @@ export default function WebsitePage({
   scale = 1,
   isPreview = false,
   step,
+  imageDimensions,
+  privacyPolicy,
 }: {
   website: Website
   scale?: number
   isPreview?: boolean
   step?: number | null
+  imageDimensions?: ImageDimensions
+  privacyPolicy?: boolean
 }) {
-  const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false)
+  const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(privacyPolicy || false)
   const content = website?.content || {}
   const activeTheme =
     WEBSITE_THEMES[content?.theme as keyof typeof WEBSITE_THEMES] ||
@@ -61,6 +66,10 @@ export default function WebsitePage({
     return () => clearTimeout(timer)
   }, [step, isPreview])
 
+  useEffect(() => {
+    setShowPrivacyPolicy(privacyPolicy || false)
+  }, [privacyPolicy])
+
   return (
     <div
       className={`${activeTheme.bg} ${activeTheme.text} ${
@@ -72,22 +81,19 @@ export default function WebsitePage({
     >
       <WebsiteViewTracker vanityPath={website.vanityPath} />
       <WebsiteHeader activeTheme={activeTheme} website={website} />
-      <HeroSection activeTheme={activeTheme} content={content} />
+      <HeroSection activeTheme={activeTheme} content={content} imageDimensions={imageDimensions} />
       <AboutSection activeTheme={activeTheme} content={content} />
       <ContactSection
         activeTheme={activeTheme}
         content={content}
         vanityPath={website.vanityPath}
-        onPrivacyPolicyClick={() => setShowPrivacyPolicy(true)}
       />
       <WebsiteFooter
         activeTheme={activeTheme}
-        onPrivacyPolicyClick={() => setShowPrivacyPolicy(true)}
         committee={content.about?.committee || candidateName}
       />
       <PrivacyPolicyModal
         open={showPrivacyPolicy}
-        onClose={() => setShowPrivacyPolicy(false)}
         content={content}
         activeTheme={activeTheme}
       />
