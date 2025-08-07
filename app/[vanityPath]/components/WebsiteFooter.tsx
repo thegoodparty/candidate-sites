@@ -1,6 +1,6 @@
 'use client'
 
-import Button from '@/app/shared/buttons/Button'
+import Link from 'next/link'
 import { WebsiteTheme } from '../types/website.type'
 
 interface WebsiteFooterProps {
@@ -18,13 +18,13 @@ export default function WebsiteFooter({
         <p className="text-base mb-4">Paid for and authorized by {committee}</p>
         <p className="text-sm mb-4">
           &copy; {new Date().getFullYear()} • All Rights Reserved •{' '}
-          <Button
-            className="text-sm hover:underline"
-            variant="text"
+          <Link
+            className="hover:underline"
             href="?privacy=true"
+            scroll={false}
           >
             Privacy Policy
-          </Button>
+          </Link>
         </p>
 
         <div className="flex items-center justify-center gap-2 text-xs text-gray-500 mt-2 pt-2 ">
