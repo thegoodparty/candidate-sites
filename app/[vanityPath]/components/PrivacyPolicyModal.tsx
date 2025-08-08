@@ -1,18 +1,18 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import ResponsiveModal from '../../shared/utils/ResponsiveModal'
 import { Website, WebsiteTheme } from '../types/website.type'
+import formatPhoneNumber from '@/app/shared/utils/phoneFormatter'
 
 interface PrivacyPolicyModalProps {
   open: boolean
-  onClose: () => void
   content: Website['content']
   activeTheme: WebsiteTheme
 }
 
 export default function PrivacyPolicyModal({
   open,
-  onClose,
   content,
   activeTheme,
 }: PrivacyPolicyModalProps) {
@@ -22,6 +22,11 @@ export default function PrivacyPolicyModal({
     day: 'numeric',
     year: 'numeric',
   })
+  const router = useRouter()
+
+  const onClose = () => {
+    router.push('?privacy=false', { scroll: false })
+  }
 
   return (
     <ResponsiveModal
@@ -80,7 +85,7 @@ export default function PrivacyPolicyModal({
           </p>
           <p>
             If you need assistance with text messaging, reply with HELP or
-            contact us at {content?.contact?.phone || ''} or{' '}
+            contact us at {formatPhoneNumber(content?.contact?.phone || '')} or{' '}
             {content?.contact?.email || ''}.
           </p>
         </div>
@@ -99,7 +104,7 @@ export default function PrivacyPolicyModal({
             policy, please contact us at:
           </p>
           <p className="mt-2">Email: {content?.contact?.email || ''}</p>
-          <p>Phone: {content?.contact?.phone || ''}</p>
+          <p>Phone: {formatPhoneNumber(content?.contact?.phone || '')}</p>
           <p>Address: {content?.contact?.address || ''}</p>
         </div>
       </div>
