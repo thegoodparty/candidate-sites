@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import { fetchHelper } from '@/helpers/fetchHelper'
+import { sanitizeWebsite } from '@/helpers/sanitizeWebsite'
 import WebsitePage from './components/WebsitePage'
 import { Website } from './types/website.type'
 import { getCandidateMetaData } from '../shared/utils/candidateMetaData'
@@ -39,7 +40,9 @@ export default async function CandidateWebsitePage({ params, searchParams }: Pag
     notFound()
   }
 
-  const image = website.content?.main?.image
+  const sanitized = sanitizeWebsite(website)
+
+  const image = sanitized.content?.main?.image
   let imageDimensions: ImageDimensions | undefined = undefined
 
   if (image) {
@@ -55,7 +58,7 @@ export default async function CandidateWebsitePage({ params, searchParams }: Pag
       {/* 
       <WebsiteViewTracker vanityPath={website.vanityPath} />
      */}
-      <WebsitePage website={website} imageDimensions={imageDimensions} privacyPolicy={privacy==='true'} />
+      <WebsitePage website={sanitized} imageDimensions={imageDimensions} privacyPolicy={privacy==='true'} />
     </>
   )
 }

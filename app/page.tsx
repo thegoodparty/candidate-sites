@@ -1,6 +1,7 @@
 import WebsitePage from './[vanityPath]/components/WebsitePage'
 import { Website } from './[vanityPath]/types/website.type'
 import { fetchHelper } from '@/helpers/fetchHelper'
+import { sanitizeWebsite } from '@/helpers/sanitizeWebsite'
 import { headers } from 'next/headers'
 import { getCandidateMetaData } from './shared/utils/candidateMetaData'
 
@@ -46,5 +47,5 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
     )
   }
 
-  return <WebsitePage website={website} privacyPolicy={privacy==='true'} />
+  return <WebsitePage website={sanitizeWebsite(website)} privacyPolicy={privacy==='true'} />
 }
