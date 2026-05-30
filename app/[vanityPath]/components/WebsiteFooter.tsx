@@ -1,6 +1,8 @@
 'use client'
 
 import Link from 'next/link'
+import { usePathname, useSearchParams } from 'next/navigation'
+import getModalHref from '../../shared/utils/getModalHref'
 import { WebsiteTheme } from '../types/website.type'
 
 interface WebsiteFooterProps {
@@ -12,6 +14,9 @@ export default function WebsiteFooter({
   activeTheme,
   committee = '',
 }: WebsiteFooterProps) {
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
   return (
     <footer className={`py-6 px-4 border-t ${activeTheme.border}`}>
       <div className="container mx-auto text-center">
@@ -20,10 +25,18 @@ export default function WebsiteFooter({
           &copy; {new Date().getFullYear()} • All Rights Reserved •{' '}
           <Link
             className="hover:underline"
-            href="?privacy=true"
+            href={getModalHref(pathname, searchParams.toString(), 'privacy')}
             scroll={false}
           >
             Privacy Policy
+          </Link>
+          {' • '}
+          <Link
+            className="hover:underline"
+            href={getModalHref(pathname, searchParams.toString(), 'sms-terms')}
+            scroll={false}
+          >
+            SMS Terms
           </Link>
         </p>
 
